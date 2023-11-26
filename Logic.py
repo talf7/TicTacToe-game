@@ -6,7 +6,7 @@ class Main_Menu:
     def __init__(self,root):
         self.root = root
         self.root.title("TicTacToe Main Menu")
-        self.root.geometry("400x400")
+        self.root.geometry("900x500")
         self.root.resizable(False, False)
 
 
@@ -14,16 +14,21 @@ class Window:
     def __init__(self,root):
         self.root = root
         self.win_condition = False
-        self.player_turn = 0
+        self.player_turn = 1
         self.check_if_all_clicked = True
+        self.Winner_label = tk.Label(root, text="", font=('Mistral 18 bold'))
         self.list_Of_Buttons = [[] * 3 for i in range(3)]
         self.root.title("TicTacToe game")
-        self.root.geometry("1100x800")
-        self.root.resizable(False, False)
+        self.root.focus()
+        self.root.resizable(False,False)
+        self.root.geometry("900x750")
         self.root.configure(bg="cyan")
         self.label = tk.Label(text="Tic Tac Toe", height=2, bg="cyan", fg="black", font=("Courier",44))
         self.label.pack(pady=10)
-        self.label.place(x=200, y=50)
+        self.label.place(x=215, y=10)
+        self.turn_label = tk.Label(root, text="X turn", bg="cyan", font=('Courier', 36))
+        self.turn_label.pack(pady=10)
+        self.turn_label.place(x=310, y=650)
         for i in range(3):
             for j in range(3):
                 self.button = XOButton(root)
@@ -32,94 +37,93 @@ class Window:
 
         self.button1 = tk.Button(root, text="Main manu", height=1, width=10, bd='5', font=("Vladimir Script", 24), command=root.destroy)
         self.button1.pack(pady=10,padx=0)
-        self.button1.place(x=800,y=160)
+        self.button1.place(x=675,y=160)
         self.button2 = tk.Button(root, text="Restart game", height=1, width=10, bd='5', font=("Vladimir Script", 24), command=self.restart_game)
         self.button2.pack(pady=10,padx=0)
-        self.button2.place(x=800,y=260)
+        self.button2.place(x=675,y=260)
         self.button3 = tk.Button(root, text="Close game", height=1, width=10, bd='5', font=("Vladimir Script", 24), command=root.destroy)
         self.button3.pack(pady=10,padx=0)
-        self.button3.place(x=800,y=360)
+        self.button3.place(x=675,y=360)
 
-    def winner_window(self, XorO, list_of_Buttons):
-        top = tk.Toplevel(self.root)
-        top.geometry("750x250")
-        top.title("Child Window")
-        win_message = tk.Label(top, text="", font=('Mistral 18 bold'))
-        win_message.place(x=150, y=80)
+    def winner_window(self, XorO):
         output_text = ""
 
         if XorO == "":
             output_text = "there is a Tie!"
         else:
-            tk.Label(top, text="The winner is: " + XorO, font=('Mistral 18 bold')).place(x=150, y=80)
-        for b in self.list_Of_Buttons:
-            b.reset_button()
-            # winner.configure(text="Tie!")
-
             output_text = "The winner is: " + XorO
-        win_message.pack(pady=10)
-        # time.sleep(3)
-        win_message.configure(text=output_text)
-        restart_button = tk.Button(top, text="click to restart", command=lambda: self.reset(top), height=10, width=30)
-        restart_button.pack(pady=10)
+        self.Winner_label = tk.Label(root, text=output_text,bg="cyan", font=('Courier', 20))
+        self.Winner_label.pack(pady=10,padx=10)
+        self.Winner_label.place(x=285, y=120)
 
     def do_nothing(self):
-        return
+        pass
 
     def check_Winner(self, XorO):
         rowLen = len(self.list_Of_Buttons[0])
+        checkOne = True
+        checkTwo = True
+        shouldBreak = False
+
         for i in range(rowLen):
+            if shouldBreak:
+                break
             # checking diagonal bottom right to Top left
-            if self.list_Of_Buttons[rowLen - i - 2][i + 1].type == self.list_Of_Buttons[rowLen - 1][0].type and self.list_Of_Buttons[rowLen - 1][0].type != None:
-                if i + 2 == rowLen:
-                    self.win_condition = True
-                    return
-            else:
-                break
-            # checking diagonal top left to bottom right
-            if self.list_Of_Buttons[i + 1][i + 1].type == self.list_Of_Buttons[0][0].type and self.list_Of_Buttons[0][0] != None :
-                if i + 2 == rowLen:
-                    self.win_condition = True
-                    return
-            else:
-                break
-            for j in range(rowLen):
-                # checking rows
-                if self.list_Of_Buttons[i][j + 1].type == self.list_Of_Buttons[i][0].type and self.list_Of_Buttons[i][0].type != None:
-                    if j + 2 == rowLen:
+            if self.list_Of_Buttons[rowLen - 1][0].type != None and checkOne:
+                if self.list_Of_Buttons[rowLen - i - 2][i + 1].type == self.list_Of_Buttons[rowLen - 1][0].type:
+                    if i + 2 == rowLen:
                         self.win_condition = True
                         return
                 else:
-                    break
-                # checking columns
-                if self.list_Of_Buttons[j + 1][i].type == self.list_Of_Buttons[0][i].type and self.list_Of_Buttons[0][i].type != None:
-                    if j + 2 == rowLen:
+                    checkOne = False
+
+                # checking diagonal top left to bottom right
+            if self.list_Of_Buttons[0][0] != None and checkTwo:
+                if self.list_Of_Buttons[i + 1][i + 1].type == self.list_Of_Buttons[0][0].type:
+                    if i + 2 == rowLen:
                         self.win_condition = True
-                    return
+                        return
                 else:
-                    break
+                    checkTwo = False
+            checkThree = True
+            checkFour = True
+            for j in range(rowLen):
+                if checkThree and self.list_Of_Buttons[i][0].type != None:
+                    # checking rows
+                    if self.list_Of_Buttons[i][j + 1].type == self.list_Of_Buttons[i][0].type:
+                        if j + 2 == rowLen:
+                            self.win_condition = True
+                            shouldBreak = True
+                            return
+                    else:
+                        checkThree = False
+                    # checking columns
+                    if checkFour and self.list_Of_Buttons[0][i].type != None:
+                        if self.list_Of_Buttons[j + 1][i].type == self.list_Of_Buttons[0][i].type:
+                            if j + 2 == rowLen:
+                                self.win_condition = True
+                                shouldBreak = True
+                            return
+                        else:
+                            checkFour = False
 
         if self.win_condition:
             for b in self.list_Of_Buttons:
                 b.button.configure(command=self.do_nothing)
+
             self.winner_window(XorO)
             return
-
-
-        for i in range(len(self.list_Of_Buttons)):
-            for j in range(len(self.list_Of_Buttons)):
-                if self.list_Of_Buttons[i][j].is_clicked == False:
+        self.check_if_all_clicked = True
+        for r in self.list_Of_Buttons:
+            for b in r:
+                if b.is_clicked == False:
                     self.check_if_all_clicked = False
         if self.check_if_all_clicked:
             self.winner_window("")
 
-
-        # if True:
-        #     self.label = tk.Label(text="the winner is: ", height=2, bg="cyan", fg="black", font=("Courier", 44))
-        #     self.label.pack(pady=10)
-        #     self.label.place(x=200, y=650)
-
     def restart_game(self):
+        window.Winner_label.destroy()
+        window.turn_label.destroy()
         for i in range(3):
             for j in range(3):
                 XOButton.reset_button(window.list_Of_Buttons[i][j])
@@ -130,14 +134,15 @@ class Window:
 class XOButton():
     def __init__(self, root):
         self.root = root
-        self.white_img =  ImageTk.PhotoImage(Image.open('Color-white.jpeg').resize((100,100)))
+        self.white_img =  ImageTk.PhotoImage(Image.open('Color-white.jpeg').resize((155,155)))
         self.o_img = ImageTk.PhotoImage(Image.open('O_img.png').resize((155, 155)))
         self.x_img = ImageTk.PhotoImage(Image.open("X_img.png").resize((155, 155)))
-        self.button = tk.Button(root,command=self.PlaceXO,image=self.white_img, height=155, width=155, bg="orange")
+        self.button = tk.Button(root,command=self.PlaceXO,image=self.white_img, height=155, width=155, bg="black")
         self.button.image = self.white_img
         self.button.pack(pady=6,padx=3)
         self.is_clicked = False
         self.type = None
+        #self.win_condition = False
 
     def reset_button(self):
         self.button.configure(command=self.PlaceXO,image=self.white_img)
@@ -157,6 +162,9 @@ class XOButton():
                 self.is_clicked = True
                 self.type = "o"
                 window.check_Winner("O")
+                window.turn_label = tk.Label(root, text="X turn", bg="cyan", font=('Courier', 36))
+                window.turn_label.pack(pady=10)
+                window.turn_label.place(x=310, y=650)
             else:
                 self.button.configure(image=self.x_img)
                 self.button.image = self.x_img
@@ -165,9 +173,13 @@ class XOButton():
                 self.is_clicked = True
                 self.type = "x"
                 window.check_Winner("X")
+                window.turn_label = tk.Label(root, text="O turn", bg="cyan", font=('Courier', 36))
+                window.turn_label.pack(pady=10)
+                window.turn_label.place(x=310, y=650)
         return
 
 
 root = tk.Tk()
 window = Window(root)
+
 root.mainloop()

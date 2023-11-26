@@ -70,14 +70,14 @@ class Window:
         rowLen = len(self.list_Of_Buttons[0])
         for i in range(rowLen):
             # checking diagonal bottom right to Top left
-            if self.list_Of_Buttons[rowLen - i - 2][i + 1] == self.list_Of_Buttons[rowLen - 1][0].type and self.list_Of_Buttons[rowLen - 1][0].type != None:
+            if self.list_Of_Buttons[rowLen - i - 2][i + 1].type == self.list_Of_Buttons[rowLen - 1][0].type and self.list_Of_Buttons[rowLen - 1][0].type != None:
                 if i + 2 == rowLen:
                     self.win_condition = True
                     return
             else:
                 break
             # checking diagonal top left to bottom right
-            if self.list_Of_Buttons[i + 1][i + 1].type == self.list_Of_Buttons[0][0] and self.list_Of_Buttons[0][0] != None :
+            if self.list_Of_Buttons[i + 1][i + 1].type == self.list_Of_Buttons[0][0].type and self.list_Of_Buttons[0][0] != None :
                 if i + 2 == rowLen:
                     self.win_condition = True
                     return
@@ -99,7 +99,7 @@ class Window:
                 else:
                     break
 
-        if (self.win_condition):
+        if self.win_condition:
             for b in self.list_Of_Buttons:
                 b.button.configure(command=self.do_nothing)
             self.winner_window(XorO)

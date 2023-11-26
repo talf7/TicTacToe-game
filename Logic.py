@@ -73,44 +73,44 @@ class Window:
                 if self.list_Of_Buttons[rowLen - i - 2][i + 1].type == self.list_Of_Buttons[rowLen - 1][0].type:
                     if i + 2 == rowLen:
                         self.win_condition = True
-                        return
+                        break
                 else:
                     checkOne = False
 
-                # checking diagonal top left to bottom right
-            if self.list_Of_Buttons[0][0] != None and checkTwo:
+            # checking diagonal top left to bottom right
+            if self.list_Of_Buttons[0][0].type != None and checkTwo:
                 if self.list_Of_Buttons[i + 1][i + 1].type == self.list_Of_Buttons[0][0].type:
                     if i + 2 == rowLen:
                         self.win_condition = True
-                        return
+                        break
                 else:
                     checkTwo = False
             checkThree = True
             checkFour = True
             for j in range(rowLen):
-                if checkThree and self.list_Of_Buttons[i][0].type != None:
-                    # checking rows
+                # checking rows
+                if self.list_Of_Buttons[i][0].type != None and checkThree:
                     if self.list_Of_Buttons[i][j + 1].type == self.list_Of_Buttons[i][0].type:
                         if j + 2 == rowLen:
                             self.win_condition = True
                             shouldBreak = True
-                            return
+                            break
                     else:
                         checkThree = False
-                    # checking columns
-                    if checkFour and self.list_Of_Buttons[0][i].type != None:
-                        if self.list_Of_Buttons[j + 1][i].type == self.list_Of_Buttons[0][i].type:
-                            if j + 2 == rowLen:
-                                self.win_condition = True
-                                shouldBreak = True
-                            return
-                        else:
-                            checkFour = False
+                # checking columns
+                if self.list_Of_Buttons[0][i].type != None and checkFour:
+                    if self.list_Of_Buttons[j + 1][i].type == self.list_Of_Buttons[0][i].type:
+                        if j + 2 == rowLen:
+                            self.win_condition = True
+                            shouldBreak = True
+                            break
+                    else:
+                        checkFour = False
 
         if self.win_condition:
-            for b in self.list_Of_Buttons:
-                b.button.configure(command=self.do_nothing)
-
+            for r in self.list_Of_Buttons:
+                for b in r:
+                    b.button.configure(command=self.do_nothing)
             self.winner_window(XorO)
             return
         self.check_if_all_clicked = True
@@ -134,9 +134,9 @@ class Window:
 class XOButton():
     def __init__(self, root):
         self.root = root
-        self.white_img =  ImageTk.PhotoImage(Image.open('Color-white.jpeg').resize((155,155)))
-        self.o_img = ImageTk.PhotoImage(Image.open('O_img.png').resize((155, 155)))
-        self.x_img = ImageTk.PhotoImage(Image.open("X_img.png").resize((155, 155)))
+        self.white_img =  ImageTk.PhotoImage(Image.open('pictures\Color-white.jpeg').resize((155,155)))
+        self.o_img = ImageTk.PhotoImage(Image.open('pictures\O_img.png').resize((155, 155)))
+        self.x_img = ImageTk.PhotoImage(Image.open("pictures\X_img.png").resize((155, 155)))
         self.button = tk.Button(root,command=self.PlaceXO,image=self.white_img, height=155, width=155, bg="black")
         self.button.image = self.white_img
         self.button.pack(pady=6,padx=3)

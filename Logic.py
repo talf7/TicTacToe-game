@@ -48,21 +48,10 @@ class Window:
             output_text = "there is a Tie!"
         else:
             output_text = "The winner is: " + XorO
-        Winner_label = tk.Label(root, text=output_text, font=('Mistral 18 bold'))
-        Winner_label.pack(pady=10,padx=10)
-        Winner_label.place(x=330, y=650)
+        self.Winner_label = tk.Label(root, text=output_text, font=('Mistral 18 bold'))
+        self.Winner_label.pack(pady=10,padx=10)
+        self.Winner_label.place(x=330, y=650)
 
-        for r in self.list_Of_Buttons:
-            for b in r:
-                b.reset_button()
-            # winner.configure(text="Tie!")
-
-            output_text = "The winner is: " + XorO
-        win_message.pack(pady=10)
-        # time.sleep(3)
-        win_message.configure(text=output_text)
-        # restart_button = tk.Button(top, text="click to restart", command=lambda: self.reset(top), height=10, width=30)
-        # restart_button.pack(pady=10)
 
     def do_nothing(self):
         pass
@@ -76,43 +65,47 @@ class Window:
         for r in self.list_Of_Buttons:
             for b in r:
                 print(b.is_clicked)
-        for i in range(rowLen - 1):
+        for i in range(rowLen):
             if shouldBreak:
                 break
             # checking diagonal bottom right to Top left
-            if self.list_Of_Buttons[rowLen - i - 2][i + 1].type == self.list_Of_Buttons[rowLen - 1][0].type and self.list_Of_Buttons[rowLen - 1][0].type != None and checkOne:
-                if i + 2 == rowLen:
-                    self.win_condition = True
-                    break
-            else:
-                checkOne = False
+            if self.list_Of_Buttons[rowLen - 1][0].type != None and checkOne:
+                if self.list_Of_Buttons[rowLen - i - 2][i + 1].type == self.list_Of_Buttons[rowLen - 1][0].type:
+                    if i + 2 == rowLen:
+                        self.win_condition = True
+                        break
+                else:
+                    checkOne = False
 
             # checking diagonal top left to bottom right
-            if self.list_Of_Buttons[i + 1][i + 1].type == self.list_Of_Buttons[0][0].type and self.list_Of_Buttons[0][0].type != None and checkTwo :
-                if i + 2 == rowLen:
-                    self.win_condition = True
-                    break
-            else:
-                checkTwo = False
+            if self.list_Of_Buttons[0][0].type != None and checkTwo:
+                if self.list_Of_Buttons[i + 1][i + 1].type == self.list_Of_Buttons[0][0].type :
+                    if i + 2 == rowLen:
+                        self.win_condition = True
+                        break
+                else:
+                    checkTwo = False
             checkThree = True
             checkFour = True
-            for j in range(rowLen - 1):
+            for j in range(rowLen):
             # checking rows
-                if self.list_Of_Buttons[i][j + 1].type == self.list_Of_Buttons[i][0].type and self.list_Of_Buttons[i][0].type != None and checkThree:
-                    if j + 2 == rowLen:
-                        self.win_condition = True
-                        shouldBreak = True
-                        break
-                else:
-                    checkThree = False
+                if self.list_Of_Buttons[i][0].type != None and checkThree:
+                    if self.list_Of_Buttons[i][j + 1].type == self.list_Of_Buttons[i][0].type:
+                        if j + 2 == rowLen:
+                            self.win_condition = True
+                            shouldBreak = True
+                            break
+                    else:
+                        checkThree = False
                 # checking columns
-                if self.list_Of_Buttons[j + 1][i].type == self.list_Of_Buttons[0][i].type and self.list_Of_Buttons[0][i].type != None and checkFour:
-                    if j + 2 == rowLen:
-                        self.win_condition = True
-                        shouldBreak = True
-                        break
-                else:
-                    checkFour = False
+                if self.list_Of_Buttons[0][i].type != None and checkFour:
+                    if self.list_Of_Buttons[j + 1][i].type == self.list_Of_Buttons[0][i].type:
+                        if j + 2 == rowLen:
+                            self.win_condition = True
+                            shouldBreak = True
+                            break
+                    else:
+                        checkFour = False
 
         if self.win_condition:
             for r in self.list_Of_Buttons:
@@ -135,6 +128,7 @@ class Window:
         #     self.label.place(x=200, y=650)
 
     def restart_game(self):
+        self.Winner_label.destroy()
         for i in range(3):
             for j in range(3):
                 XOButton.reset_button(window.list_Of_Buttons[i][j])

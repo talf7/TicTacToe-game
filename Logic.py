@@ -2,6 +2,14 @@ import time
 import tkinter as tk
 from PIL import Image,ImageTk
 
+class Main_Menu:
+    def __init__(self,root):
+        self.root = root
+        self.root.title("TicTacToe Main Menu")
+        self.root.geometry("400x400")
+        self.root.resizable(False, False)
+
+
 class Window:
     def __init__(self,root):
         self.root = root
@@ -10,23 +18,27 @@ class Window:
         self.check_if_all_clicked = True
         self.list_Of_Buttons = [[] * 3 for i in range(3)]
         self.root.title("TicTacToe game")
-        self.root.geometry("1000x1000")
+        self.root.geometry("1100x800")
+        self.root.resizable(False, False)
         self.root.configure(bg="cyan")
         self.label = tk.Label(text="Tic Tac Toe", height=2, bg="cyan", fg="black", font=("Courier",44))
         self.label.pack(pady=10)
         self.label.place(x=200, y=50)
         for i in range(3):
             for j in range(3):
-                self.button = Button(root)
+                self.button = XOButton(root)
                 self.button.button.place(x=(j+1)*160, y=(i+1)*160)
                 self.list_Of_Buttons[i].append(self.button)
 
-
-    def reset(self, top):
-        for b in self.list_Of_Buttons:
-            b.button.reset_button()
-        top.destroy()
-
+        self.button1 = tk.Button(root, text="Main manu", height=1, width=10, bd='5', font=("Vladimir Script", 24), command=root.destroy)
+        self.button1.pack(pady=10,padx=0)
+        self.button1.place(x=800,y=160)
+        self.button2 = tk.Button(root, text="Restart game", height=1, width=10, bd='5', font=("Vladimir Script", 24), command=self.restart_game)
+        self.button2.pack(pady=10,padx=0)
+        self.button2.place(x=800,y=260)
+        self.button3 = tk.Button(root, text="Close game", height=1, width=10, bd='5', font=("Vladimir Script", 24), command=root.destroy)
+        self.button3.pack(pady=10,padx=0)
+        self.button3.place(x=800,y=360)
 
     def winner_window(self, XorO, list_of_Buttons):
         top = tk.Toplevel(self.root)
@@ -87,7 +99,6 @@ class Window:
                 else:
                     break
 
-
         if (self.win_condition):
             for b in self.list_Of_Buttons:
                 b.button.configure(command=self.do_nothing)
@@ -109,13 +120,15 @@ class Window:
         #     self.label.place(x=200, y=650)
 
     def restart_game(self):
-        for b in self.list_Of_Buttons:
-            b.reset_button()
+        for i in range(3):
+            for j in range(3):
+                XOButton.reset_button(window.list_Of_Buttons[i][j])
         pass
 
 
-class Button():
-    def __init__(self,root):
+
+class XOButton():
+    def __init__(self, root):
         self.root = root
         self.white_img =  ImageTk.PhotoImage(Image.open('Color-white.jpeg').resize((100,100)))
         self.o_img = ImageTk.PhotoImage(Image.open('O_img.png').resize((155, 155)))
